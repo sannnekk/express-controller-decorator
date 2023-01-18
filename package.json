@@ -1,0 +1,15 @@
+{
+  "name": "express-controller-decorator",
+  "version": "1.0.0",
+  "description": "Controller decorator to easily bind mvc to an express app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "express",
+    "controller"
+  ],
+  "author": "sannnekk",
+  "license": "ISC"
+}
