@@ -1,6 +1,7 @@
 import { ControllerResponse } from './decorators/ControllerResponse'
 import { getControllerMetadata } from 'meta'
 import express, { NextFunction, Request, Response } from 'express'
+import { Middleware } from './Middleware'
 
 export function injectControllers(
 	app: express.Application,
@@ -16,7 +17,9 @@ export function injectControllers(
 		const controllerInstance = new controller()
 		const router = express.Router()
 
-		router.use(...middlewares.map((middleware: any) => middleware.use))
+		router.use(
+			...middlewares.map((middleware: Middleware) => middleware.use)
+		)
 
 		Object.keys(routes).forEach((route) => {
 			if (controllerInstance.hasOwnProperty(route)) {
@@ -51,7 +54,7 @@ function convertMiddleware(
 						Object.keys(result.headers).forEach((key) =>
 							res.append(key, result.headers[key])
 						)
-						res.status(result.status).send(result)
+						res.status(result.status).send(result.body)
 					} else {
 						throw new Error('Invalid controller response')
 					}
@@ -60,7 +63,7 @@ function convertMiddleware(
 					next(error)
 				})
 		} else if (result instanceof ControllerResponse) {
-			res.status(result.status).send(res)
+			res.status(result.status).send(result.body)
 		} else {
 			throw new Error('Invalid controller response')
 		}

@@ -2,7 +2,7 @@ import HttpStatusCode from './HTTPStatusCodes'
 
 export class ControllerResponse {
 	constructor(
-		public body: any,
+		public body: any = undefined,
 		public status: number = 200,
 		public headers: { [key: string]: string } = {}
 	) {}

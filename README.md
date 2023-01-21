@@ -1,15 +1,7 @@
-<div align="center" id="top"> 
-  <img src="./.github/app.gif" alt="Express Controller Decorator" />
-
-&#xa0;
-
-  <!-- <a href="https://expresscontrollerdecorator.netlify.app">Demo</a> -->
-</div>
-
 <h1 align="center">Express Controller Decorator</h1>
 
 <p align="center">
-  <img alt="Github top language" src="https://img.shields.io/github/languages/top/{{YOUR_GITHUB_USERNAME}}/express-controller-decorator?color=56BEB8">
+  <img alt="Github top language" src="https://img.shields.io/github/languages/top/sannnekk/express-controller-decorator?color=56BEB8">
 
   <img alt="Github language count" src="https://img.shields.io/github/languages/count/sannnekk/express-controller-decorator?color=56BEB8">
 
@@ -67,8 +59,10 @@ Before starting :checkered_flag:, you need to have [express](https://expressjs.c
 And you also need the support of experimental decorators in your tsconfig.json file:
 
 ```json
-compilerOptions: {
-  "experimentalDecorators": true,
+{
+	"compilerOptions": {
+		"experimentalDecorators": true
+	}
 }
 ```
 
@@ -78,6 +72,49 @@ compilerOptions: {
 # Install it with npm
 $ npm i --save express-controller-decorator
 ```
+
+## :usage: Usage
+
+First of all, add a Controller decorator to your Controller. Then, add HTTPMethod decorators to the methods you wish to be invoked for each http method.
+
+NOTE: All methods that are marked with HTTP method decorators must return ControllerResponse or Promise<ControllerResponse> instance.
+
+Request and Response args will be injected automatically
+
+```ts
+@Controller('/user')
+export class SomeController {
+	@Post('/:id')
+	public getUser(req: Request, res: Response): ControllerResponse {
+		// ...some code
+
+		return new ControllerResponse(body, status, headers)
+	}
+
+	// NOTE: decorator params are optional
+	@Post()
+	public createUser(req: Request, res: Response): ControllerResponse {
+		// ...some code
+
+		// NOTE: All args here are optional
+		return new ControllerResponse(null, 200)
+	}
+}
+```
+
+There's a Middleare abstract class. If you wish to add some middlewares to your Controller or to a specific method:
+
+```ts
+@Controller('/', new Middleware1(), new Middleware2(), ...)
+```
+
+or
+
+```ts
+@Get('', new Middleware1(), new Middleware2(), ...)
+```
+
+Note! The middlewares you pass are executed before your method
 
 ## :memo: License
 
