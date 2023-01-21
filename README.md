@@ -84,7 +84,7 @@ Request and Response args will be injected automatically
 ```ts
 @Controller('/user')
 export class SomeController {
-	@Post('/:id')
+	@Post('/:id') // Request and Response args will be injected automatically
 	public getUser(req: Request, res: Response): ControllerResponse {
 		// ...some code
 
