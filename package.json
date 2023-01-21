@@ -2,14 +2,36 @@
   "name": "express-controller-decorator",
   "version": "1.0.0",
   "description": "Controller decorator to easily bind mvc to an express app",
-  "main": "index.js",
+  "main": "src/index.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sannnekk/express-controller-decorator"
+  },
+  "homepage": "https://github.com/sannnekk/express-controller-decorator",
+  "bugs": {
+    "url": "https://github.com/sannnekk/express-controller-decorator/issues"
+  },
+  "engines": {
+    "node": ">=7.1.0"
+  },
+  "files": [
+    "dist/**/*"
+  ],
   "keywords": [
     "express",
     "controller"
   ],
   "author": "sannnekk",
-  "license": "ISC"
+  "license": "MIT",
+  "devDependencies": {
+    "@types/express": "^4.17.15",
+    "@types/node": "^18.11.18",
+    "typescript": "^4.9.4"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
 }
