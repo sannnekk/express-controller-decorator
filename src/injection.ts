@@ -1,5 +1,6 @@
+import { ControllerResponse } from './decorators/ControllerResponse'
 import { getControllerMetadata } from 'meta'
-import express from 'express'
+import express, { NextFunction, Request, Response } from 'express'
 
 export function injectControllers(
 	app: express.Application,
@@ -24,11 +25,44 @@ export function injectControllers(
 				router[method](
 					path,
 					...middlewares.map((middleware: any) => middleware.use),
-					controllerInstance[route]
+					convertMiddleware(controllerInstance[route])
 				)
 			}
 		})
 
 		app.use(path, router)
 	})
+}
+
+function convertMiddleware(
+	f: (
+		req: Request,
+		res: Response,
+		next: NextFunction
+	) => ControllerResponse
+) {
+	return (req: Request, res: Response, next: NextFunction) => {
+		const result = f(req, res, next)
+
+		if (result instanceof Promise) {
+			result
+				.then((result) => {
+					if (result instanceof ControllerResponse) {
+						Object.keys(result.headers).forEach((key) =>
+							res.append(key, result.headers[key])
+						)
+						res.status(result.status).send(result)
+					} else {
+						throw new Error('Invalid controller response')
+					}
+				})
+				.catch((error) => {
+					next(error)
+				})
+		} else if (result instanceof ControllerResponse) {
+			res.status(result.status).send(res)
+		} else {
+			throw new Error('Invalid controller response')
+		}
+	}
 }
