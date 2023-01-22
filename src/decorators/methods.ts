@@ -1,26 +1,45 @@
 import { getControllerMetadata, HTTPMethod, MethodMeta } from '../meta'
 import { Middleware } from '../Middleware'
 
-function createMethodDecorator(method: HTTPMethod) {
-	return function (path: string, ...middlewares: Middleware[]) {
-		return function (target: any, key: string, descriptor: any) {
-			const controllerMetadata = getControllerMetadata(target)
-			const methodMetadata: MethodMeta = {
-				route: path,
-				method,
-				middlewares,
-			}
-
-			controllerMetadata.routes[key] = methodMetadata
-
-			return descriptor
+function createMethodDecorator(
+	method: HTTPMethod,
+	path: string,
+	...middlewares: Middleware[]
+) {
+	return function (target: any, key: string, descriptor: any) {
+		const controllerMetadata = getControllerMetadata(target)
+		const methodMetadata: MethodMeta = {
+			route: path,
+			method,
+			middlewares,
 		}
+
+		controllerMetadata.routes[key] = methodMetadata
+
+		return descriptor
 	}
 }
 
-export const Get = createMethodDecorator('get')
-export const Post = createMethodDecorator('post')
-export const Put = createMethodDecorator('put')
-export const Patch = createMethodDecorator('patch')
-export const Delete = createMethodDecorator('delete')
-export const Head = createMethodDecorator('head')
+export function Get(path: string, ...middlewares: Middleware[]) {
+	return createMethodDecorator('get', path, ...middlewares)
+}
+
+export function Post(path: string, ...middlewares: Middleware[]) {
+	return createMethodDecorator('post', path, ...middlewares)
+}
+
+export function Put(path: string, ...middlewares: Middleware[]) {
+	return createMethodDecorator('put', path, ...middlewares)
+}
+
+export function Patch(path: string, ...middlewares: Middleware[]) {
+	return createMethodDecorator('patch', path, ...middlewares)
+}
+
+export function Delete(path: string, ...middlewares: Middleware[]) {
+	return createMethodDecorator('delete', path, ...middlewares)
+}
+
+export function Head(path: string, ...middlewares: Middleware[]) {
+	return createMethodDecorator('head', path, ...middlewares)
+}
