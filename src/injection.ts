@@ -1,7 +1,7 @@
 import { ControllerResponse } from './decorators/ControllerResponse'
 import { getControllerMetadata } from './meta'
 import express, { Request, Response } from 'express'
-//import { Middleware } from './Middleware'
+import { Middleware } from './Middleware'
 
 export function injectControllers(
 	app: express.Application,
@@ -18,30 +18,30 @@ export function injectControllers(
 		const router = express.Router()
 
 		if (middlewares.length > 0) {
-			/* router.use(
+			router.use(
 				...middlewares.map((middleware: Middleware) => middleware.use)
-			) */
+			)
 		}
 
 		Object.keys(routes).forEach((route) => {
-			if (controllerInstance.hasOwnProperty(route)) {
-				const {
-					method,
-					middlewares,
-					route: currentRoute,
-				} = routes[route]!
+			const {
+				method,
+				middlewares,
+				route: currentRoute,
+			} = routes[route]!
 
-				const middlewareFunctions =
-					middlewares.length > 0
-						? middlewares.map((middleware: any) => middleware.use)
-						: []
+			const middlewareFunctions =
+				middlewares.length > 0
+					? middlewares.map((middleware: any) => middleware.use)
+					: []
 
-				middlewareFunctions.push(
-					convertToMiddleware(controllerInstance[route])
-				)
+			middlewareFunctions.push(
+				convertToMiddleware(controllerInstance[route])
+			)
 
-				router[method](currentRoute, ...middlewareFunctions)
-			}
+			router[method](currentRoute, ...middlewareFunctions)
+
+			console.log(method, currentRoute, middlewareFunctions)
 		})
 
 		app.use(path, router)

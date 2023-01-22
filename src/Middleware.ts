@@ -5,5 +5,5 @@ export interface Middleware {
 		request: Request,
 		response: Response,
 		next: NextFunction
-	): Promise<void>
+	): void | Promise<void>
 }
