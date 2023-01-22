@@ -1,5 +1,5 @@
-import { getControllerMetadata, HTTPMethod, MethodMeta } from 'meta'
-import { Middleware } from 'Middleware'
+import { getControllerMetadata, HTTPMethod, MethodMeta } from '../meta'
+import { Middleware } from '../Middleware'
 
 function createMethodDecorator(method: HTTPMethod) {
 	return function (path: string, ...middlewares: Middleware[]) {

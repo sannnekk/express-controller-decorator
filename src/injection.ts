@@ -1,5 +1,5 @@
 import { ControllerResponse } from './decorators/ControllerResponse'
-import { getControllerMetadata } from 'meta'
+import { getControllerMetadata } from './meta'
 import express, { NextFunction, Request, Response } from 'express'
 import { Middleware } from './Middleware'
 

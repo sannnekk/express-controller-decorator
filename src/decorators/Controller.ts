@@ -1,5 +1,4 @@
-import { ControllerClass } from '../meta'
-import { getControllerMetadata } from 'meta'
+import { getControllerMetadata, ControllerClass } from '../meta'
 import { Middleware } from 'Middleware'
 
 export function Controller(path: string, ...middlewares: Middleware[]) {
