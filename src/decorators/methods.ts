@@ -1,4 +1,9 @@
-import { getControllerMetadata, HTTPMethod, MethodMeta } from '../meta'
+import {
+	ControllerClass,
+	getControllerMetadata,
+	HTTPMethod,
+	MethodMeta,
+} from '../meta'
 import { Middleware } from '../Middleware'
 
 function createMethodDecorator(
@@ -6,7 +11,11 @@ function createMethodDecorator(
 	path: string,
 	...middlewares: Middleware[]
 ) {
-	return function (target: any, key: string, descriptor: any) {
+	return function (
+		target: ControllerClass,
+		key: string,
+		descriptor?: any
+	) {
 		const controllerMetadata = getControllerMetadata(target)
 		const methodMetadata: MethodMeta = {
 			route: path,

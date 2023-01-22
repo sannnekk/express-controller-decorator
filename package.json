@@ -1,6 +1,6 @@
 {
   "name": "express-controller-decorator",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Controller decorator to easily bind mvc to an express app",
   "main": "src/index.ts",
   "types": "dist/index.d.ts",
