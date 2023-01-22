@@ -1,11 +1,12 @@
 {
   "name": "express-controller-decorator",
-  "version": "1.0.3",
+  "version": "1.0.6",
   "description": "Controller decorator to easily bind mvc to an express app",
   "main": "src/index.ts",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "publish": "npm run build && npm publish"
   },
   "repository": {
     "type": "git",

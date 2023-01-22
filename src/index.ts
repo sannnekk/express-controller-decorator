@@ -1,4 +1,5 @@
 export { Controller } from './decorators/Controller'
+export { ControllerResponse } from './decorators/ControllerResponse'
 export {
 	Get,
 	Post,
