@@ -17,19 +17,26 @@ export function injectControllers(
 		const controllerInstance = new controller()
 		const router = express.Router()
 
-		router.use(
-			...middlewares.map((middleware: Middleware) => middleware.use)
-		)
+		if (middlewares.length > 0) {
+			router.use(
+				...middlewares.map((middleware: Middleware) => middleware.use)
+			)
+		}
 
 		Object.keys(routes).forEach((route) => {
 			if (controllerInstance.hasOwnProperty(route)) {
 				const { method, middlewares, route: path } = routes[route]!
 
-				router[method](
-					path,
-					...middlewares.map((middleware: any) => middleware.use),
+				const middlewareFunctions =
+					middlewares.length > 0
+						? middlewares.map((middleware: any) => middleware.use)
+						: []
+
+				middlewareFunctions.push(
 					convertMiddleware(controllerInstance[route])
 				)
+
+				router[method](path, ...middlewareFunctions)
 			}
 		})
 
