@@ -1,7 +1,7 @@
 import { ControllerResponse } from './decorators/ControllerResponse'
 import { getControllerMetadata } from './meta'
-import express, { NextFunction, Request, Response } from 'express'
-import { Middleware } from './Middleware'
+import express, { Request, Response } from 'express'
+//import { Middleware } from './Middleware'
 
 export function injectControllers(
 	app: express.Application,
@@ -12,20 +12,24 @@ export function injectControllers(
 			path = '/',
 			middlewares,
 			routes,
-		} = getControllerMetadata(controller)
+		} = getControllerMetadata(controller.prototype)
 
 		const controllerInstance = new controller()
 		const router = express.Router()
 
 		if (middlewares.length > 0) {
-			router.use(
+			/* router.use(
 				...middlewares.map((middleware: Middleware) => middleware.use)
-			)
+			) */
 		}
 
 		Object.keys(routes).forEach((route) => {
 			if (controllerInstance.hasOwnProperty(route)) {
-				const { method, middlewares, route: path } = routes[route]!
+				const {
+					method,
+					middlewares,
+					route: currentRoute,
+				} = routes[route]!
 
 				const middlewareFunctions =
 					middlewares.length > 0
@@ -33,10 +37,10 @@ export function injectControllers(
 						: []
 
 				middlewareFunctions.push(
-					convertMiddleware(controllerInstance[route])
+					convertToMiddleware(controllerInstance[route])
 				)
 
-				router[method](path, ...middlewareFunctions)
+				router[method](currentRoute, ...middlewareFunctions)
 			}
 		})
 
@@ -44,31 +48,23 @@ export function injectControllers(
 	})
 }
 
-function convertMiddleware(
-	f: (
-		req: Request,
-		res: Response,
-		next: NextFunction
-	) => ControllerResponse
+function convertToMiddleware(
+	f: (req: Request, res: Response) => ControllerResponse
 ) {
-	return (req: Request, res: Response, next: NextFunction) => {
-		const result = f(req, res, next)
+	return (req: Request, res: Response) => {
+		const result = f(req, res)
 
 		if (result instanceof Promise) {
-			result
-				.then((result) => {
-					if (result instanceof ControllerResponse) {
-						Object.keys(result.headers).forEach((key) =>
-							res.append(key, result.headers[key])
-						)
-						res.status(result.status).send(result.body)
-					} else {
-						throw new Error('Invalid controller response')
-					}
-				})
-				.catch((error) => {
-					next(error)
-				})
+			result.then((result) => {
+				if (result instanceof ControllerResponse) {
+					Object.keys(result.headers).forEach((key) =>
+						res.append(key, result.headers[key])
+					)
+					res.status(result.status).send(result.body)
+				} else {
+					throw new Error('Invalid controller response')
+				}
+			})
 		} else if (result instanceof ControllerResponse) {
 			res.status(result.status).send(result.body)
 		} else {
