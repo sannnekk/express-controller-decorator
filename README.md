@@ -161,6 +161,12 @@ class MyController {
 }
 ```
 
+## :list: Todo:
+
+- :checkered_flag: Middleware support
+- :checkered_flag: Fallback route
+- :uncheckered_flag: Generate swagger file
+
 ## :memo: License
 
 This project is under license from MIT. For more details, see the [LICENSE](LICENSE.md) file.
