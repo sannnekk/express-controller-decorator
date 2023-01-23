@@ -29,27 +29,33 @@ function createMethodDecorator(
 	}
 }
 
-export function Get(path: string, ...middlewares: Middleware[]) {
+export function Get(path: string = '/', ...middlewares: Middleware[]) {
 	return createMethodDecorator('get', path, ...middlewares)
 }
 
-export function Post(path: string, ...middlewares: Middleware[]) {
+export function Post(path: string = '/', ...middlewares: Middleware[]) {
 	return createMethodDecorator('post', path, ...middlewares)
 }
 
-export function Put(path: string, ...middlewares: Middleware[]) {
+export function Put(path: string = '/', ...middlewares: Middleware[]) {
 	return createMethodDecorator('put', path, ...middlewares)
 }
 
-export function Patch(path: string, ...middlewares: Middleware[]) {
+export function Patch(
+	path: string = '/',
+	...middlewares: Middleware[]
+) {
 	return createMethodDecorator('patch', path, ...middlewares)
 }
 
-export function Delete(path: string, ...middlewares: Middleware[]) {
+export function Delete(
+	path: string = '/',
+	...middlewares: Middleware[]
+) {
 	return createMethodDecorator('delete', path, ...middlewares)
 }
 
-export function Head(path: string, ...middlewares: Middleware[]) {
+export function Head(path: string = '/', ...middlewares: Middleware[]) {
 	return createMethodDecorator('head', path, ...middlewares)
 }
 
