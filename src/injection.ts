@@ -30,19 +30,41 @@ export function injectControllers(
 				route: currentRoute,
 			} = routes[route]!
 
+			if (method !== 'fallback') {
+				const middlewareFunctions =
+					middlewares.length > 0
+						? middlewares.map(
+								(middleware: Middleware) => middleware.use
+						  )
+						: []
+
+				middlewareFunctions.push(
+					convertToMiddleware(controllerInstance[route])
+				)
+
+				router[method](currentRoute, ...middlewareFunctions)
+			}
+		})
+
+		const fallbackRoute = Object.keys(routes).find(
+			(key) => routes[key]!.method === 'fallback'
+		)
+
+		if (fallbackRoute) {
+			const { middlewares, route: currentRoute } =
+				routes[fallbackRoute]!
+
 			const middlewareFunctions =
 				middlewares.length > 0
-					? middlewares.map((middleware: any) => middleware.use)
+					? middlewares.map((middleware: Middleware) => middleware.use)
 					: []
 
 			middlewareFunctions.push(
-				convertToMiddleware(controllerInstance[route])
+				convertToMiddleware(controllerInstance[fallbackRoute])
 			)
 
-			router[method](currentRoute, ...middlewareFunctions)
-
-			console.log(method, currentRoute, middlewareFunctions)
-		})
+			router.all(currentRoute, ...middlewareFunctions)
+		}
 
 		app.use(path, router)
 	})

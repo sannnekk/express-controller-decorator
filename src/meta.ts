@@ -25,6 +25,7 @@ export type HTTPMethod =
 	| 'patch'
 	| 'delete'
 	| 'head'
+	| 'fallback'
 
 export function getControllerMetadata(
 	target: ControllerClass

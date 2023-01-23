@@ -11,8 +11,6 @@ class SomeMiddleware implements Middleware {
 		response: express.Response,
 		next: express.NextFunction
 	): void {
-		console.log('MIIIIID')
-
 		if (request.params.id == '1') {
 			next()
 		} else {
@@ -21,7 +19,7 @@ class SomeMiddleware implements Middleware {
 	}
 }
 
-@Controller('/test', new SomeMiddleware())
+@Controller('/test')
 class TestController {
 	@Get('/test2/:id')
 	getTest(req: express.Request, res: express.Response) {

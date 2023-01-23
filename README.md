@@ -116,6 +116,51 @@ or
 
 Note! The middlewares you pass are executed before your method
 
+The following decorators are available:
+
+- `Controller(path: string)` - Decorator to mark classes that are controllers
+- `Post(path: string = '/', ...middlewares: Middleware[])` - Method decorator
+- `Get(path: string = '/', ...middlewares: Middleware[])` - Method decorator
+- `Delete(path: string = '/', ...middlewares: Middleware[])` - Method decorator
+- `Put(path: string = '/', ...middlewares: Middleware[])` - Method decorator
+- `Patch(path: string = '/', ...middlewares: Middleware[])` - Method decorator
+- `Head(path: string = '/', ...middlewares: Middleware[])` - Method decorator
+- `Fallback(...middlewares: Middleware[])` - Method decorator to mark a fallback method. It will be invoked when no other route/method passes
+
+There's also a `Middleware` interface. If you wish to create a Middleware and then use it in your decorators, you must create each Middleware as a class implementing this interface. It has only one method: `use()` that will be invoked while using the route the middleware sits in. Example:
+
+```ts
+interface Middleware {
+	use(
+		request: Request,
+		response: Response,
+		next: NextFunction
+	): void | Promise<void>
+}
+```
+
+Example:
+
+```ts
+class SomeMiddleware implements Middleware {
+	use(
+		request: Request,
+		response: Response,
+		next: NextFunction
+	): void | Promise<void> {
+		// ... some usefull code
+	}
+}
+
+@Controller('/auth', new SomeMiddleware()) // <-- Passing Middleware in Controller decorator means it will be invoked before EVERY route in this class
+class MyController {
+	@Get('/', new SomeMiddleware()) // <-- This Middleware will be used only for this route and this method
+	public foo(req: Request, res: Response): ControllerResponse {
+		// ...some usefull code
+	}
+}
+```
+
 ## :memo: License
 
 This project is under license from MIT. For more details, see the [LICENSE](LICENSE.md) file.
