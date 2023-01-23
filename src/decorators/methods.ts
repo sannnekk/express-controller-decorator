@@ -52,3 +52,7 @@ export function Delete(path: string, ...middlewares: Middleware[]) {
 export function Head(path: string, ...middlewares: Middleware[]) {
 	return createMethodDecorator('head', path, ...middlewares)
 }
+
+export function Fallback(...middlewares: Middleware[]) {
+	return createMethodDecorator('fallback', 'all', ...middlewares)
+}
