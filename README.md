@@ -161,11 +161,11 @@ class MyController {
 }
 ```
 
-## :list: Todo:
+## :white_check_mark: Todo:
 
-- :checkered_flag: Middleware support
-- :checkered_flag: Fallback route
-- :uncheckered_flag: Generate swagger file
+- :white_check_mark: Middleware support
+- :white_check_mark: Fallback route
+- Generate swagger file
 
 ## :memo: License
 
