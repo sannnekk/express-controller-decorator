@@ -102,20 +102,6 @@ export class SomeController {
 }
 ```
 
-There's a Middleare abstract class. If you wish to add some middlewares to your Controller or to a specific method:
-
-```ts
-@Controller('/', new Middleware1(), new Middleware2(), ...)
-```
-
-or
-
-```ts
-@Get('', new Middleware1(), new Middleware2(), ...)
-```
-
-Note! The middlewares you pass are executed before your method
-
 The following decorators are available:
 
 - `Controller(path: string)` - Decorator to mark classes that are controllers
@@ -138,6 +124,20 @@ interface Middleware {
 	): void | Promise<void>
 }
 ```
+
+If you wish to add some middlewares to your Controller or to a specific method:
+
+```ts
+@Controller('/', new Middleware1(), new Middleware2(), ...)
+```
+
+or
+
+```ts
+@Get('', new Middleware1(), new Middleware2(), ...)
+```
+
+Note! The middlewares you pass are executed before your method. THe must implement the Middleware interface
 
 Example:
 
