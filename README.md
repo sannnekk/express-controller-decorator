@@ -48,7 +48,6 @@ A simple, lightweit npm package to bind your controllers to express
 
 The following tools were used in this project:
 
-- [Expo](https://expo.io/)
 - [Express](https://expressjs.com/)
 - [TypeScript](https://www.typescriptlang.org/)
 
