@@ -26,7 +26,9 @@ export function injectControllers(
 		// append middlewares if they exist
 		if (middlewares.length > 0) {
 			router.use(
-				...middlewares.map((middleware: Middleware) => middleware.use)
+				...middlewares.map((middleware: Middleware) =>
+					convertToMiddleware(middleware.use)
+				)
 			)
 		}
 
