@@ -1,4 +1,3 @@
-import { SwaggerMeta } from './swaggerGenerator'
 import { Middleware } from './Middleware'
 
 export interface ControllerClass extends Object {
@@ -9,12 +8,9 @@ export interface MethodMeta {
 	route: string
 	method: HTTPMethod
 	middlewares: Middleware[]
-	swagger?: SwaggerMeta
 }
 
 export interface IControllerMetadata {
-	swaggerName: string
-	swaggerDescription: string
 	path?: string
 	middlewares: Middleware[]
 	routes: {
@@ -36,8 +32,6 @@ export function getControllerMetadata(
 ): IControllerMetadata {
 	if (!target.__controller_decorator_metadata__) {
 		target.__controller_decorator_metadata__ = {
-			swaggerDescription: '',
-			swaggerName: '',
 			path: undefined,
 			middlewares: [],
 			routes: {},

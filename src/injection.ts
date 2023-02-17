@@ -7,29 +7,11 @@ import express, {
 	Router,
 } from 'express'
 import { Middleware } from './Middleware'
-import { SwaggerGenerator, Options } from './swaggerGenerator'
 
 export function injectControllers(
 	app: express.Application,
-	controllers: any[],
-	options: Options = {
-		swagger: false,
-	}
+	controllers: any[]
 ) {
-	let swaggerGenerator: SwaggerGenerator
-
-	// init swagger if set
-	if (options.swagger) {
-		if (!options.swaggerFile) {
-			throw new Error('No swagger output file specified')
-		}
-
-		swaggerGenerator = new SwaggerGenerator(
-			options?.swagger,
-			options?.swaggerFile
-		)
-	}
-
 	// iterate through ech controlller
 	controllers.forEach((controller) => {
 		const {
@@ -46,11 +28,6 @@ export function injectControllers(
 			router.use(
 				...middlewares.map((middleware: Middleware) => middleware.use)
 			)
-		}
-
-		// use swagger if optioned
-		if (options.swagger) {
-			swaggerGenerator.addController(path, middlewares, routes)
 		}
 
 		// add routes
@@ -81,11 +58,6 @@ export function injectControllers(
 		// append router to app
 		app.use(path, router)
 	})
-
-	// generate swagger if optioned
-	if (options.swagger) {
-		swaggerGenerator!.save()
-	}
 }
 
 function convertToMiddleware(f: Middleware['use']) {
