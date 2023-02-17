@@ -35,7 +35,7 @@ export function injectControllers(
 			if (routes[route]!.method !== 'fallback') {
 				appendMiddleware(
 					router,
-					controllerInstance[route],
+					controllerInstance[route].bind(controllerInstance),
 					routes[route]!
 				)
 			}
@@ -50,7 +50,7 @@ export function injectControllers(
 		if (fallbackRoute) {
 			appendMiddleware(
 				router,
-				controllerInstance[fallbackRoute],
+				controllerInstance[fallbackRoute].bind(controllerInstance),
 				routes[fallbackRoute]!
 			)
 		}
