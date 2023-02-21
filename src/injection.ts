@@ -63,31 +63,19 @@ export function injectControllers(
 }
 
 function convertToMiddleware(f: Middleware['use']) {
-	console.log('convertToMiddleware applied')
-
 	return async (req: Request, res: Response, next?: NextFunction) => {
-		console.log('Middleware applied')
 		let result = f(req, res, next!)
-		console.log('Midleware resulted with type ' + typeof result)
 
-		if (result instanceof Promise) {
-			console.log('Promisifying')
-			result = await result
-			console.log('Promisified')
-		}
+		if (result instanceof Promise) result = await result
 
 		if (
 			result instanceof ControllerResponse &&
 			typeof result !== 'undefined'
 		) {
-			console.log('ControllerResponse detected, adding headers')
 			Object.keys(result.headers).forEach((key) =>
 				res.append(key, (result as ControllerResponse).headers[key])
 			)
-			console.log('Headers added, sending response')
 			res.status(result.status).send(result.body)
-		} else {
-			throw new Error('Invalid controller response')
 		}
 	}
 }
@@ -101,7 +89,9 @@ function appendMiddleware(
 
 	const middlewareFunctions =
 		middlewares.length > 0
-			? middlewares.map((middleware: Middleware) => middleware.use)
+			? middlewares.map((middleware: Middleware) =>
+					convertToMiddleware(middleware.use.bind(middleware))
+			  )
 			: []
 
 	middlewareFunctions.push(convertToMiddleware(f))

@@ -1,6 +1,6 @@
 {
   "name": "express-controller-decorator",
-  "version": "1.1.10",
+  "version": "1.1.13",
   "description": "Controller decorator to easily bind mvc to an express app",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -37,7 +37,6 @@
   },
   "dependencies": {
     "express": "^4.18.2",
-    "http-status-codes": "^2.2.0",
-    "yaml": "^2.2.1"
+    "http-status-codes": "^2.2.0"
   }
 }
