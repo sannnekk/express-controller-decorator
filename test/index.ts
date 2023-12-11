@@ -1,35 +1,19 @@
-import { Controller } from '../src/decorators/Controller'
 import express from 'express'
+import { Controller } from '../src/decorators/Controller'
 import { injectControllers } from '../src/injection'
 import { Get } from '../src/decorators/methods'
 import { ControllerResponse } from '../src/decorators/ControllerResponse'
-import { Middleware } from '../src/Middleware'
-
-class SomeMiddleware implements Middleware {
-	use(
-		request: express.Request,
-		response: express.Response,
-		next: express.NextFunction
-	): void {
-		if (request.params.id == '1') {
-			next()
-		} else {
-			response.status(202).send('KOKOKO')
-		}
-	}
-}
 
 @Controller('/test')
 class TestController {
 	@Get('/test2/:id')
 	getTest(req: express.Request, res: express.Response) {
-		console.log(req, res)
-		return new ControllerResponse('Hui' + req.params.id, 405)
+		console.log('Worked!')
+		return new ControllerResponse('Test ' + req.params.id, 405)
 	}
 }
 
 const app = express()
+injectControllers(app)
 
-injectControllers(app, [TestController])
-
-app.listen(3010)
+app.listen(3010, () => console.log('Listening on port 3010'))

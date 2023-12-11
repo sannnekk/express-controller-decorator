@@ -1,9 +1,15 @@
+import { ControllerContainer } from '../ControllersContainer'
 import { getControllerMetadata, ControllerClass } from '../meta'
 import { Middleware } from '../Middleware'
 
-export function Controller(path: string, ...middlewares: Middleware[]) {
-	return function (target: ControllerClass) {
-		const metadata = getControllerMetadata((target as any).prototype)
+// NOTE: The return type of this function is `any` to make compiler happy
+export function Controller(
+	path: string,
+	...middlewares: Middleware[]
+): any {
+	return function (target: ControllerClass): void {
+		ControllerContainer.addController(target)
+		const metadata = getControllerMetadata(target.prototype)
 
 		metadata.path = path
 		metadata.middlewares = middlewares

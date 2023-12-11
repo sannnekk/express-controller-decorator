@@ -1,6 +1,7 @@
 import { Middleware } from './Middleware'
 
-export interface ControllerClass extends Object {
+export interface ControllerClass {
+	new (): any
 	__controller_decorator_metadata__?: IControllerMetadata
 }
 

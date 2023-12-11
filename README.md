@@ -42,7 +42,8 @@ A simple, lightweit npm package to bind your controllers to express
 
 :heavy_check_mark: uses modern TS decorators;\
 :heavy_check_mark: support of Middleware;\
-:heavy_check_mark: No need of instantiating your controllers with the new keyword;
+:heavy_check_mark: No need of instantiating your controllers with the
+new keyword;
 
 ## :rocket: Technologies
 
@@ -53,30 +54,31 @@ The following tools were used in this project:
 
 ## :white_check_mark: Requirements
 
-Before starting :checkered_flag:, you need to have [express](https://expressjs.com) and [Typescript v.4.4 or above](https://www.typescriptlang.org/) installed.
+Before starting :checkered_flag:, you need to have
+[express](https://expressjs.com) and
+[Typescript v.4.4 or above](https://www.typescriptlang.org/) installed.
 
-And you also need the support of experimental decorators in your tsconfig.json file:
-
-```json
-{
-	"compilerOptions": {
-		"experimentalDecorators": true
-	}
-}
-```
-
-## :checkered_flag: Starting
+## :checkered_flag: Installing
 
 ```bash
 # Install it with npm
 $ npm i --save express-controller-decorator
+
+# Install it with yarn
+$ yarn add express-controller-decorator
+
+# Install it with pnpm
+$ pnpm add express-controller-decorator
 ```
 
-## :usage: Usage
+## :arrow_forward: Usage
 
-First of all, add a Controller decorator to your Controller. Then, add HTTPMethod decorators to the methods you wish to be invoked for each http method.
+First of all, add a `@Controller` decorator to your Controller. Then,
+add `@HTTPMethod `decorators to the methods you wish to be invoked for
+each http method.
 
-NOTE: All methods that are marked with HTTP method decorators must return ControllerResponse or Promise<ControllerResponse> instance.
+NOTE: All methods that are marked with HTTP method decorators must
+return `ControllerResponse` or `Promise<ControllerResponse>` instance.
 
 Request and Response args will be injected automatically
 
@@ -103,16 +105,38 @@ export class SomeController {
 
 The following decorators are available:
 
-- `Controller(path: string)` - Decorator to mark classes that are controllers
-- `Post(path: string = '/', ...middlewares: Middleware[])` - Method decorator
-- `Get(path: string = '/', ...middlewares: Middleware[])` - Method decorator
-- `Delete(path: string = '/', ...middlewares: Middleware[])` - Method decorator
-- `Put(path: string = '/', ...middlewares: Middleware[])` - Method decorator
-- `Patch(path: string = '/', ...middlewares: Middleware[])` - Method decorator
-- `Head(path: string = '/', ...middlewares: Middleware[])` - Method decorator
-- `Fallback(...middlewares: Middleware[])` - Method decorator to mark a fallback method. It will be invoked when no other route/method passes
+- `Controller(path: string)` - Decorator to mark classes that are
+  controllers
+- `Post(path: string = '/', ...middlewares: Middleware[])` - Method
+  decorator
+- `Get(path: string = '/', ...middlewares: Middleware[])` - Method
+  decorator
+- `Delete(path: string = '/', ...middlewares: Middleware[])` - Method
+  decorator
+- `Put(path: string = '/', ...middlewares: Middleware[])` - Method
+  decorator
+- `Patch(path: string = '/', ...middlewares: Middleware[])` - Method
+  decorator
+- `Head(path: string = '/', ...middlewares: Middleware[])` - Method
+  decorator
+- `Fallback(...middlewares: Middleware[])` - Method decorator to mark a
+  fallback method. It will be invoked when no other route/method passes
 
-There's also a `Middleware` interface. If you wish to create a Middleware and then use it in your decorators, you must create each Middleware as a class implementing this interface. It has only one method: `use()` that will be invoked while using the route the middleware sits in. Example:
+Then, you need to add your controllers to the express app instance in
+your `main.ts` file:
+
+```ts
+const app = express()
+
+injectControllers(app)
+app.listen(3010)
+```
+
+There's also a `Middleware` interface. If you wish to create a
+Middleware and then use it in your decorators, you must create each
+Middleware as a class implementing this interface. It has only one
+method: `use()` that will be invoked while using the route the
+middleware sits in. Example:
 
 ```ts
 interface Middleware {
@@ -124,7 +148,8 @@ interface Middleware {
 }
 ```
 
-If you wish to add some middlewares to your Controller or to a specific method:
+If you wish to add some middlewares to your Controller or to a specific
+method:
 
 ```ts
 @Controller('/', new Middleware1(), new Middleware2(), ...)
@@ -136,7 +161,8 @@ or
 @Get('', new Middleware1(), new Middleware2(), ...)
 ```
 
-Note! The middlewares you pass are executed before your method. THe must implement the Middleware interface
+Note! The middlewares you pass are executed before your method. THe must
+implement the `Middleware` interface
 
 Example:
 
@@ -160,7 +186,7 @@ class MyController {
 }
 ```
 
-## :white_check_mark: Todo:
+## :white_check_mark: Todo
 
 - :white_check_mark: Middleware support
 - :white_check_mark: Fallback route
@@ -168,9 +194,11 @@ class MyController {
 
 ## :memo: License
 
-This project is under license from MIT. For more details, see the [LICENSE](LICENSE.md) file
+This project is under license from MIT. For more details, see the
+[LICENSE](LICENSE.md) file
 
-Made with :heart: by <a href="https://github.com/sannnekk" target="_blank">sannnekk</a>
+Made with :heart: by
+<a href="https://github.com/sannnekk" target="_blank">sannnekk</a>
 
 &#xa0;
 

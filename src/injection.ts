@@ -1,5 +1,9 @@
 import { ControllerResponse } from './decorators/ControllerResponse'
-import { getControllerMetadata, MethodMeta } from './meta'
+import {
+	ControllerClass,
+	getControllerMetadata,
+	MethodMeta,
+} from './meta'
 import express, {
 	NextFunction,
 	Request,
@@ -7,11 +11,13 @@ import express, {
 	Router,
 } from 'express'
 import { Middleware } from './Middleware'
+import { ControllerContainer } from './ControllersContainer'
 
-export function injectControllers(
-	app: express.Application,
-	controllers: any[]
-) {
+type ControllerKey = keyof Omit<ControllerClass, `__${string}`>
+
+export function injectControllers(app: express.Application) {
+	const controllers = ControllerContainer.getControllers()
+
 	// iterate through ech controlller
 	controllers.forEach((controller) => {
 		const {
@@ -37,7 +43,11 @@ export function injectControllers(
 			if (routes[route]!.method !== 'fallback') {
 				appendMiddleware(
 					router,
-					controllerInstance[route].bind(controllerInstance),
+					(
+						controllerInstance[route as ControllerKey] as (
+							...args: any[]
+						) => any
+					).bind(controllerInstance),
 					routes[route]!
 				)
 			}
@@ -52,7 +62,11 @@ export function injectControllers(
 		if (fallbackRoute) {
 			appendMiddleware(
 				router,
-				controllerInstance[fallbackRoute].bind(controllerInstance),
+				(
+					controllerInstance[fallbackRoute as ControllerKey] as (
+						...args: any[]
+					) => any
+				).bind(controllerInstance),
 				routes[fallbackRoute]!
 			)
 		}
