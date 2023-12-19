@@ -12,8 +12,13 @@ import express, {
 } from 'express'
 import { Middleware } from './Middleware'
 import { ControllerContainer } from './ControllersContainer'
+import { Context } from './Context'
 
 type ControllerKey = keyof Omit<ControllerClass, `__${string}`>
+
+export function setContextClass(context: any) {
+	Context.setContextClass(context)
+}
 
 export function injectControllers(app: express.Application) {
 	const controllers = ControllerContainer.getControllers()
@@ -33,7 +38,7 @@ export function injectControllers(app: express.Application) {
 		if (middlewares.length > 0) {
 			router.use(
 				...middlewares.map((middleware: Middleware) =>
-					convertToMiddleware(middleware.use.bind(middleware))
+					convert(middleware.use.bind(middleware), true)
 				)
 			)
 		}
@@ -41,14 +46,15 @@ export function injectControllers(app: express.Application) {
 		// add routes
 		Object.keys(routes).forEach((route) => {
 			if (routes[route]!.method !== 'fallback') {
-				appendMiddleware(
+				append(
 					router,
 					(
 						controllerInstance[route as ControllerKey] as (
 							...args: any[]
 						) => any
 					).bind(controllerInstance),
-					routes[route]!
+					routes[route]!,
+					false
 				)
 			}
 		})
@@ -60,14 +66,15 @@ export function injectControllers(app: express.Application) {
 
 		// append fallback route if it exists
 		if (fallbackRoute) {
-			appendMiddleware(
+			append(
 				router,
 				(
 					controllerInstance[fallbackRoute as ControllerKey] as (
 						...args: any[]
 					) => any
 				).bind(controllerInstance),
-				routes[fallbackRoute]!
+				routes[fallbackRoute]!,
+				false
 			)
 		}
 
@@ -76,9 +83,22 @@ export function injectControllers(app: express.Application) {
 	})
 }
 
-function convertToMiddleware(f: Middleware['use']) {
+function convert(
+	f:
+		| Middleware['use']
+		| ((context: object) => ReturnType<Middleware['use']>),
+	isMiddleware = false
+) {
 	return async (req: Request, res: Response, next?: NextFunction) => {
-		let result = f(req, res, next!)
+		let result: ReturnType<Middleware['use']>
+
+		if (Context.getContextClass() && !isMiddleware) {
+			result = (
+				f as (context: object) => ReturnType<Middleware['use']>
+			)(Context.bind(req))
+		} else {
+			result = f(req, res, next!)
+		}
 
 		if (result instanceof Promise) result = await result
 
@@ -94,21 +114,22 @@ function convertToMiddleware(f: Middleware['use']) {
 	}
 }
 
-function appendMiddleware(
+function append(
 	router: Router,
 	f: Middleware['use'],
-	meta: MethodMeta
+	meta: MethodMeta,
+	isMiddleware = false
 ) {
 	const { method, middlewares, route: currentRoute } = meta
 
 	const middlewareFunctions =
 		middlewares.length > 0
 			? middlewares.map((middleware: Middleware) =>
-					convertToMiddleware(middleware.use.bind(middleware))
+					convert(middleware.use.bind(middleware), isMiddleware)
 			  )
 			: []
 
-	middlewareFunctions.push(convertToMiddleware(f))
+	middlewareFunctions.push(convert(f, isMiddleware))
 
 	if (method !== 'fallback') {
 		router[method](currentRoute, ...middlewareFunctions)

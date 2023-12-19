@@ -16,7 +16,6 @@
 		"outDir": "lib",
 		"target": "ES5",
 		"noUncheckedIndexedAccess": true,
-		"noUnusedParameters": true,
 		"experimentalDecorators": true,
 		"emitDecoratorMetadata": true
 	}

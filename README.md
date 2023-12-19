@@ -132,6 +132,54 @@ injectControllers(app)
 app.listen(3010)
 ```
 
+**NEW in 1.3.0:** You can create a custom `Context` class and make this
+lib use it instead of express' `Request` and `Response` classes. To do
+so, you need to pass your custom `Context` class to `setContextClass`
+function BEFORE calling `injectControllers` function. Example:
+
+```ts
+const app = express()
+
+class MyContext {
+	// ...some code
+
+	// req argument is optional
+	constructor(req: Request) {
+		// ...some code
+	}
+}
+
+setContextClass(MyContext)
+injectControllers(app)
+
+app.listen(3010)
+```
+
+If you did specify a custom `Context` class, you MUST use it instead of
+express' `Request` and `Response` types in your controller methods.
+Example:
+
+```ts
+@Controller('/user')
+export class SomeController {
+	// will work if you specified a custom Context class
+	@Post('/:id')
+	public getUser(ctx: MyContext): ControllerResponse {
+		// ...some code
+
+		return new ControllerResponse(body, status, headers)
+	}
+
+	// will NOT work if you specified a custom Context class
+	@Post('/:id')
+	public getUser(req: Request, res: Response): ControllerResponse {
+		// ...some code
+
+		return new ControllerResponse(body, status, headers)
+	}
+}
+```
+
 There's also a `Middleware` interface. If you wish to create a
 Middleware and then use it in your decorators, you must create each
 Middleware as a class implementing this interface. It has only one
